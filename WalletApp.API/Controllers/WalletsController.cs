@@ -79,20 +79,25 @@ namespace WalletApp.API.Controllers
 
         /// <summary>
         /// Actualiza una billetera existente.
-        /// </summary>        
+        /// </summary>
+        /// <param name="id">Identificador de la billetera a actualizar.</param>
         /// <param name="wallet">Objeto Wallet con los datos actualizados, incluyendo el identificador de la billetera.</param>
         /// <response code="204">NoContent: si se actualizó</response>
         /// <response code="404">NotFound: Si la billetera no existe</response>
         /// <response code="400">BadRequest: Si los datos enviados no son válidos</response>
-        [Authorize]        
+        [Authorize]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Update(Wallet wallet)
+        public async Task<IActionResult> Update(int id, Wallet wallet)
         {
-            if (wallet.Id == null || wallet.Id == 0 || string.IsNullOrWhiteSpace(wallet.DocumentId) || string.IsNullOrWhiteSpace(wallet.Name) || wallet.Balance < 0) 
-            { 
+            if (wallet.Id == 0 || id != wallet.Id
+                || string.IsNullOrWhiteSpace(wallet.DocumentId)
+                || string.IsNullOrWhiteSpace(wallet.Name)
+                || wallet.Balance < 0)
+            {
                 return BadRequest("Los datos proporcionados no están correctos. No es posible actualizar la cuenta."); 
             }
 
